@@ -1,0 +1,109 @@
+/*
+    Document   : neddy
+    Created on : Jul 29, 2012
+    Author     : fbudassi
+    Description:
+        Neddy Websocket client style sheet.
+*/
+
+root {
+    display: block;
+}
+
+body {
+    width: 1000px;
+    margin: auto;
+    margin-top: 10px;
+}
+
+div #main {
+    width: 1024px;
+}
+
+
+/**
+ * Menu Bar.
+ */
+.navbar .brand {
+    margin-right: 10px;
+}
+
+.navbar .nav {
+    margin-top: 25px;
+    border-style: inset;
+    border-width: 1px;
+    border-radius: 4px;
+}
+
+.navbar .no-border {
+    border-style: none;
+    margin-top: 27px;
+}
+
+.navbar .nav .combobox-container {
+    border-style: none !important;
+}
+
+.navbar .nav li a {
+    padding: 5px;
+}
+
+.combobox-container input:first-child + .add-on {
+    margin-top: 0;
+}
+
+/**
+ * Errors, Categories and TextArea.
+ */
+.alert {
+    display: none;
+}
+
+#responseText {
+    width: 99%;
+    min-width: 99%;
+    max-width: 99%;
+    height: 500px;
+    color: black;
+}
+
+/**
+ * Footer.
+ */
+#footer {
+    padding: 4px;
+    background-color: #2C2C2C;
+    background-image: -moz-linear-gradient(center top , #333333, #222222);
+    background-image: -webkit-linear-gradient(top, #333, #222);
+    background-image: -o-linear-gradient(top, #333, #222);
+    background-image: linear-gradient(top, #333, #222);
+    background-repeat: repeat-x;
+    border-radius: 4px 4px 4px 4px;
+    -webkit-border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), 0 -1px 0 rgba(0, 0, 0, 0.1) inset;
+    color: darkgray;
+}
+
+#footer #author {
+    float: right;
+}
+
+#footer a:link {
+    color: darkgray;
+    text-decoration: none;
+}
+
+#footer a:active {
+    color: white;
+    text-decoration: none;
+}
+
+#footer a:visited {
+    color: darkgray;
+    text-decoration: none;
+}
+
+#footer a:hover {
+    color: white;
+    text-decoration: none;
+}

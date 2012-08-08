@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <title>Neddy Listener</title>
+        <link rel="stylesheet" href="css/bootstrap.css" type="text/css" />
+        <link rel="stylesheet" href="css/bootstrap-responsive.css" type="text/css">
+        <link rel="stylesheet" href="css/neddy.css" type="text/css" />
+        <script type="text/javascript" src="js/jquery-1.7.2.js"></script>
+        <script type="text/javascript" src="js/bootstrap.js"></script>
+        <script type="text/javascript" src="js/utils.js"></script>
+        <script type="text/javascript" src="js/websocket.js"></script>
+        <script type="text/javascript" src="js/neddy.js"></script>
+    </head>
+    <body>
+        <!--Menubar-->
+        <div class="navbar">
+            <div class="navbar-inner">
+                <div class="container">
+                    <a class="brand" href="https://github.com/fbudassi/neddy"><img src="img/logo.png"></a>
+                    <ul class="nav">
+                        <li><a id="subscriptions" href="#"><i class=" icon-list-alt icon-white"></i>&nbsp;Subscriptions</a></li>
+                    </ul>
+                    <ul class="nav">
+                        <li><a id="reloadCategories" href="#"><i class="icon-refresh icon-white"></i>&nbsp;Reload Categories</a></li>
+                    </ul>
+                    <ul class="nav no-border">
+                        <li><select id="categories" title="Categories"></select></li>
+                    </ul>
+                    <ul class="nav no-border">
+                        <li><a id="subscribe" href="#" title="Subscribe"><i class="icon-ok icon-white"></i></a></li>
+                    </ul>
+                    <ul class="nav no-border">
+                        <li><a id="unsubscribe" href="#" title="Unsubscribe"><i class="icon-remove icon-white"></i></a></li>
+                    </ul>
+                    <ul class="nav">
+                        <li><a id="clean" href="#" title="Clean Message Area"><i class="icon-trash icon-white"></i></a></li>
+                    </ul>
+                    <ul class="nav pull-right">
+                        <li><a href="http://ar.linkedin.com/pub/federico-budassi/26/290/142"><i class="icon-user icon-white"></i>&nbsp;About Me</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!--Error Block-->
+        <div class="alert alert-block alert-error fade in">
+            <button class="close">&times;</button>
+            <h4 class="alert-heading">Error:</h4>
+            <p id="message"></p>
+        </div>
+        <!--Messages TextField-->
+        <div id="messages">
+            <textarea id="responseText" readonly="readonly"></textarea>
+        </div>
+        <!--Footer-->
+        <div id="footer">
+            <span id="program">Powered by <a href="http://netty.io">Netty</a></span>
+            <span id="author"><a href="http://ar.linkedin.com/pub/federico-budassi/26/290/142">&reg;&nbsp;Federico Budassi</a></span>
+        </div>
+    </body>
+</html>

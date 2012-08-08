@@ -1,0 +1,29 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.fbudassi</groupId>
+    <artifactId>neddy</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+
+    <name>Neddy</name>
+    <description>
+        An event driven HTTP/1.1 Web Server based on the Netty framework. Features are:
+
+        * Static content handler.
+        * Push messages handler based on WebSockets.
+        * Rest interface to receive messages/categories to the pushed.
+
+        It also includes some benchmarking tools to test its behaviour:
+
+        * Neddy Static Content benchmark, to test static content handling.
+        * Neddy REST benchmark, to test Neddy's REST interface.
+        * Neddy Websocket benchmark, to test Neddy's Websocket client interface.
+    </description>
+
+    <modules>
+        <module>neddy</module>
+        <module>neddybenchmark</module>
+    </modules>
+</project>
