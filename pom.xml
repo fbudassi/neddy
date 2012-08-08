@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.fbudassi</groupId>
-    <artifactId>neddy</artifactId>
+    <artifactId>neddy-package</artifactId>
     <version>1.0.0</version>
     <packaging>pom</packaging>
 
