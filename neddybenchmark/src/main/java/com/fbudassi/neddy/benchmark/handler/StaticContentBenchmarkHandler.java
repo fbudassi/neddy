@@ -6,9 +6,9 @@ import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class HttpResponseHandler extends SimpleChannelUpstreamHandler {
+public class StaticContentBenchmarkHandler extends SimpleChannelUpstreamHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(HttpResponseHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(StaticContentBenchmarkHandler.class);
 
     /**
      * Executed when an exception is caught.
@@ -19,6 +19,6 @@ public class HttpResponseHandler extends SimpleChannelUpstreamHandler {
      */
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
-        logger.error("Error in HttpResponseHandler", e.getCause());
+        logger.error("Error in handler", e.getCause());
     }
 }

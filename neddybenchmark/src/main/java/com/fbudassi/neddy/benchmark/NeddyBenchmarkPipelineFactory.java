@@ -1,6 +1,6 @@
 package com.fbudassi.neddy.benchmark;
 
-import com.fbudassi.neddy.benchmark.handler.HttpResponseHandler;
+import com.fbudassi.neddy.benchmark.handler.StaticContentBenchmarkHandler;
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import static org.jboss.netty.channel.Channels.pipeline;
@@ -17,7 +17,7 @@ public class NeddyBenchmarkPipelineFactory implements ChannelPipelineFactory {
         // Add necessary handlers to the pipeline.
         pipeline.addLast("codec", new HttpClientCodec());
         pipeline.addLast("aggregator", new HttpChunkAggregator(1048576));
-        pipeline.addLast("httpResponseHandler", new HttpResponseHandler());
+        pipeline.addLast("httpResponseHandler", new StaticContentBenchmarkHandler());
         return pipeline;
     }
 }
