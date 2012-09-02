@@ -1,4 +1,4 @@
-package com.fbudassi.neddy.benchmark;
+package com.fbudassi.neddy.benchmark.pipeline;
 
 import com.fbudassi.neddy.benchmark.handler.StaticContentBenchmarkHandler;
 import org.jboss.netty.channel.ChannelPipeline;
@@ -7,8 +7,17 @@ import static org.jboss.netty.channel.Channels.pipeline;
 import org.jboss.netty.handler.codec.http.HttpChunkAggregator;
 import org.jboss.netty.handler.codec.http.HttpClientCodec;
 
-public class NeddyBenchmarkPipelineFactory implements ChannelPipelineFactory {
+/**
+ *
+ * @author fbudassi
+ */
+public class StaticContentPipelineFactory implements ChannelPipelineFactory {
 
+    /**
+     * Gets the necessary Pipeline Factory for a static content benchmark.
+     * @return
+     * @throws Exception
+     */
     @Override
     public ChannelPipeline getPipeline() throws Exception {
         // Create a default pipeline implementation.

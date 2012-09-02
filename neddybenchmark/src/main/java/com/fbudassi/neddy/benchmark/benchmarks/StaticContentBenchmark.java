@@ -1,10 +1,12 @@
-package com.fbudassi.neddy.benchmark.staticcontent;
+package com.fbudassi.neddy.benchmark.benchmarks;
 
 import com.fbudassi.neddy.benchmark.NeddyBenchmark;
 import com.fbudassi.neddy.benchmark.config.Config;
+import com.fbudassi.neddy.benchmark.pipeline.StaticContentPipelineFactory;
 import java.net.InetSocketAddress;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
+import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.handler.codec.http.DefaultHttpRequest;
 import org.jboss.netty.handler.codec.http.HttpHeaders;
 import org.jboss.netty.handler.codec.http.HttpMethod;
@@ -19,7 +21,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author fbudassi
  */
-public class StaticContentBenchmark {
+public class StaticContentBenchmark implements Benchmark {
 
     private static final Logger logger = LoggerFactory.getLogger(StaticContentBenchmark.class);
     // General configuration variables.
@@ -41,8 +43,11 @@ public class StaticContentBenchmark {
     /**
      * Executes the static content benchmark with the configured parameters in
      * the properties file.
+     *
+     * @throws InterruptedException
      */
-    public static void execute() throws InterruptedException {
+    @Override
+    public void execute() throws InterruptedException {
         logger.info("Trying to generate {} connections to the server", totalConnections);
 
         // Get the first three octets by one side and the last one by the other side.
@@ -97,5 +102,13 @@ public class StaticContentBenchmark {
             // Increment last octet.
             clientIpLastOctet++;
         }
+    }
+
+    /**
+     * Returns the Static Content benchmark pipeline.
+     */
+    @Override
+    public ChannelPipelineFactory getPipeline() {
+        return new StaticContentPipelineFactory();
     }
 }

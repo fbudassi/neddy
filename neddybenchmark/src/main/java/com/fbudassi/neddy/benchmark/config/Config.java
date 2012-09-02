@@ -18,16 +18,27 @@ public final class Config {
     public static final String KEY_TCPNODELAY = "com.fbudassi.neddy.benchmark.tcpnodelay";
     public static final String KEY_KEEPALIVE = "com.fbudassi.neddy.benchmark.keepalive";
     public static final String KEY_USERAGENT = "com.fbudassi.neddy.benchmark.useragent";
-    public static final String KEY_NUMADDRESSES = "com.fbudassi.neddy.benchmark.numaddresses";
-    public static final String KEY_NUMPORTS = "com.fbudassi.neddy.benchmark.numports";
-    public static final String KEY_DELAY = "com.fbudassi.neddy.benchmark.delay";
-    //Client key constants
-    public static final String KEY_CLIENT_PORTSTART = "com.fbudassi.neddy.benchmark.clientportstart";
-    public static final String KEY_CLIENT_BASEADDRESS = "com.fbudassi.neddy.benchmark.clientbaseaddress";
     //Server key constants
     public static final String KEY_SERVER_PORT = "com.fbudassi.neddy.benchmark.serverport";
-    public static final String KEY_SERVER_PATH = "com.fbudassi.neddy.benchmark.serverpath";
+    public static final String KEY_REST_PORT = "com.fbudassi.neddy.benchmark.restport";
     public static final String KEY_SERVER_ADDRESS = "com.fbudassi.neddy.benchmark.serveraddress";
+    //Static Content benchmark constants
+    public static final String KEY_NUMADDRESSES = "com.fbudassi.neddy.benchmark.numaddresses";
+    public static final String KEY_NUMPORTS = "com.fbudassi.neddy.benchmark.numports";
+    public static final String KEY_CLIENT_PORTSTART = "com.fbudassi.neddy.benchmark.clientportstart";
+    public static final String KEY_CLIENT_BASEADDRESS = "com.fbudassi.neddy.benchmark.clientbaseaddress";
+    public static final String KEY_DELAY = "com.fbudassi.neddy.benchmark.delay";
+    public static final String KEY_SERVER_PATH = "com.fbudassi.neddy.benchmark.serverpath";
+    //Rest benchmark constants
+    public static final String KEY_NUMSPEAKERS = "com.fbudassi.neddy.benchmark.numspeakers";
+    public static final String KEY_SPEAKER_NUMCATEGORIES = "com.fbudassi.neddy.benchmark.speaker.numcategories";
+    public static final String KEY_SPEAKER_DELAYBETWEENMESSAGES = "com.fbudassi.neddy.benchmark.speaker.delaybetweenmessages";
+    public static final String KEY_RESOURCE_CATEGORY = "com.fbudassi.neddy.benchmark.resource.category";
+    public static final String KEY_RESOURCE_LISTENERS = "com.fbudassi.neddy.benchmark.resource.listeners";
+    //Websocket benchmark constants
+    public static final String KEY_NUMLISTENERS = "com.fbudassi.neddy.benchmark.numlisteners";
+    public static final String KEY_LISTENER_NUMCATEGORIES = "com.fbudassi.neddy.benchmark.listener.numcategories";
+    public static final String KEY_RESOURCE_LISTENER = "com.fbudassi.neddy.benchmark.resource.listener";
 
     /**
      * Static constructor.

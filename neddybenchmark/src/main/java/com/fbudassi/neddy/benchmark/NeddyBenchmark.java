@@ -1,11 +1,11 @@
 package com.fbudassi.neddy.benchmark;
 
+import com.fbudassi.neddy.benchmark.benchmarks.Benchmark;
+import com.fbudassi.neddy.benchmark.benchmarks.BenchmarkFactory;
 import com.fbudassi.neddy.benchmark.config.Config;
-import com.fbudassi.neddy.benchmark.rest.RestBenchmark;
-import com.fbudassi.neddy.benchmark.staticcontent.StaticContentBenchmark;
-import com.fbudassi.neddy.benchmark.websocket.WebsocketBenchmark;
 import java.util.concurrent.Executors;
 import org.jboss.netty.bootstrap.ClientBootstrap;
+import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.group.ChannelGroup;
 import org.jboss.netty.channel.group.ChannelGroupFuture;
 import org.jboss.netty.channel.group.DefaultChannelGroup;
@@ -18,7 +18,7 @@ public class NeddyBenchmark implements Shutdownable {
     private static final Logger logger = LoggerFactory.getLogger(NeddyBenchmark.class);
 
     //Allowed command line parameters
-    private enum ParameterEnum {
+    public enum ParameterEnum {
 
         STATIC, WS, REST
     }
@@ -40,7 +40,7 @@ public class NeddyBenchmark implements Shutdownable {
                 Executors.newCachedThreadPool(),
                 Executors.newCachedThreadPool())));
 
-        // ChannelGroup of all open channels (server + clients).
+        // ChannelGroup of all open channels.
         setAllChannels(new DefaultChannelGroup("neddybenchmark"));
     }
 
@@ -53,7 +53,7 @@ public class NeddyBenchmark implements Shutdownable {
     public static void main(String[] args) {
         try {
             new NeddyBenchmark().start(args);
-        } catch (InterruptedException ex) {
+        } catch (Exception ex) {
             logger.error("Error in NeddyBenchmark.", ex);
         }
     }
@@ -63,8 +63,11 @@ public class NeddyBenchmark implements Shutdownable {
      *
      * @param args
      */
-    public void start(String[] args) throws InterruptedException {
+    public void start(String[] args) throws InterruptedException, Exception {
         logger.info("Starting up {}.", NeddyBenchmark.class.getSimpleName());
+
+        // Registers a shutdown hook to free resources of this class.
+        Runtime.getRuntime().addShutdownHook(new ShutdownThread(this, "NettyBenchmark Shutdown Thread"));
 
         // Process command line parameters
         if (args.length != 1) {
@@ -73,20 +76,21 @@ public class NeddyBenchmark implements Shutdownable {
             System.exit(-1);
         }
 
-        ParameterEnum parameter = null;
+        ParameterEnum benchmarkEnum = null;
         try {
-            parameter = ParameterEnum.valueOf(args[0].replace("-", "").toUpperCase());
+            benchmarkEnum = ParameterEnum.valueOf(args[0].replace("-", "").toUpperCase());
         } catch (IllegalArgumentException iae) {
             System.out.print(getHelp(args));
             logger.error("Program called with invalid parameter. Shutting down.");
             System.exit(-1);
         }
 
-        // Registers a shutdown hook to free resources of this class.
-        Runtime.getRuntime().addShutdownHook(new ShutdownThread(this, "NettyBenchmark Shutdown Thread"));
+        // Gets the proper benchmark class.
+        Benchmark benchmark = BenchmarkFactory.getBenchmark(benchmarkEnum);
 
-        // Set up the event pipeline factory.
-        getBootstrap().setPipelineFactory(new NeddyBenchmarkPipelineFactory());
+        // Setup the proper event pipeline factory for the benchmark.
+        ChannelPipelineFactory pipelineFactory = benchmark.getPipeline();
+        getBootstrap().setPipelineFactory(pipelineFactory);
 
         // Set some necessary or convenient socket options.
         // http://download.oracle.com/javase/6/docs/api/java/net/SocketOptions.html
@@ -94,18 +98,8 @@ public class NeddyBenchmark implements Shutdownable {
         getBootstrap().setOption("keepAlive", KEEPALIVE);  // keep alive connections
         getBootstrap().setOption("connectTimeoutMillis", TIMEOUT); // connection timeout
 
-        // Switch to the requested benchmark.
-        switch (parameter) {
-            case STATIC:
-                StaticContentBenchmark.execute();
-                break;
-            case WS:
-                WebsocketBenchmark.execute();
-                break;
-            case REST:
-                RestBenchmark.execute();
-                break;
-        }
+        // Execute the requested benchmark.
+        benchmark.execute();
     }
 
     /**
