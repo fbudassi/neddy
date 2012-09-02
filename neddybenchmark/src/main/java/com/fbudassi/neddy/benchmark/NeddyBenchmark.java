@@ -35,13 +35,13 @@ public class NeddyBenchmark implements Shutdownable {
      */
     static {
         // Configure the client bootstrap.
-        setBootstrap(new ClientBootstrap(
+        bootstrap = new ClientBootstrap(
                 new NioClientSocketChannelFactory(
                 Executors.newCachedThreadPool(),
-                Executors.newCachedThreadPool())));
+                Executors.newCachedThreadPool()));
 
         // ChannelGroup of all open channels.
-        setAllChannels(new DefaultChannelGroup("neddybenchmark"));
+        allChannels = new DefaultChannelGroup("neddybenchmark");
     }
 
     /**
@@ -123,24 +123,10 @@ public class NeddyBenchmark implements Shutdownable {
     }
 
     /**
-     * @param bootstrap the bootstrap to set
-     */
-    public static void setBootstrap(ClientBootstrap bootstrap) {
-        NeddyBenchmark.bootstrap = bootstrap;
-    }
-
-    /**
      * @return the allChannels
      */
     public static ChannelGroup getAllChannels() {
         return allChannels;
-    }
-
-    /**
-     * @param allChannels the allChannels to set
-     */
-    public static void setAllChannels(ChannelGroup allChannels) {
-        NeddyBenchmark.allChannels = allChannels;
     }
 
     /**
