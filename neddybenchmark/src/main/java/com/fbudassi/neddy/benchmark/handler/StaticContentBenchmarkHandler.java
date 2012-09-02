@@ -6,6 +6,10 @@ import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ *
+ * @author fbudassi
+ */
 public class StaticContentBenchmarkHandler extends SimpleChannelUpstreamHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(StaticContentBenchmarkHandler.class);
