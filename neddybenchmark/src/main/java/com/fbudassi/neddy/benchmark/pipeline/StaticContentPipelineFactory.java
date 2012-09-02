@@ -15,6 +15,7 @@ public class StaticContentPipelineFactory implements ChannelPipelineFactory {
 
     /**
      * Gets the necessary Pipeline Factory for a static content benchmark.
+     *
      * @return
      * @throws Exception
      */
