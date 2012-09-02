@@ -21,6 +21,8 @@ public class WebsocketBenchmark implements Benchmark {
     // Configuration constants.
     private static final int SERVER_PORT = Config.getIntValue(Config.KEY_SERVER_PORT);
     private static final String SERVER_ADDRESS = Config.getValue(Config.KEY_SERVER_ADDRESS);
+    private static final int NUMLISTENERS = Config.getIntValue(Config.KEY_NUMLISTENERS);
+    private static final int NUMCATEGORIES = Config.getIntValue(Config.KEY_LISTENER_NUMCATEGORIES);
     private static final String RESOURCE_LISTENER = Config.getValue(Config.KEY_RESOURCE_LISTENER);
     // URI where to connect the websocket.
     private static URI uri;
@@ -43,6 +45,35 @@ public class WebsocketBenchmark implements Benchmark {
      */
     @Override
     public void execute() {
+        //TODO
+        
+        /*// Connect
+         System.out.println("WebSocket Client connecting");
+         ChannelFuture future =
+         bootstrap.connect(
+         new InetSocketAddress(uri.getHost(), uri.getPort()));
+         future.syncUninterruptibly();
+
+         ch = future.getChannel();
+         handshaker.handshake(ch).syncUninterruptibly();
+
+         // Send 10 messages and wait for responses
+         System.out.println("WebSocket Client sending message");
+         for (int i = 0; i < 1000; i++) {
+         ch.write(new TextWebSocketFrame("Message #" + i));
+         }
+
+         // Ping
+         System.out.println("WebSocket Client sending ping");
+         ch.write(new PingWebSocketFrame(ChannelBuffers.copiedBuffer(new byte[]{1, 2, 3, 4, 5, 6})));
+
+         // Close
+         System.out.println("WebSocket Client sending close");
+         ch.write(new CloseWebSocketFrame());
+
+         // WebSocketClientHandler will close the connection when the server
+         // responds to the CloseWebSocketFrame.
+         ch.getCloseFuture().awaitUninterruptibly();*/
     }
 
     /**
