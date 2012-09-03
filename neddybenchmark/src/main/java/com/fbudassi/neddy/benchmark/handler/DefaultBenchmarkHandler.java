@@ -7,12 +7,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * A very simple channel handler that just logs an exception in the channel when
+ * it is caught.
  *
  * @author fbudassi
  */
-public class StaticContentBenchmarkHandler extends SimpleChannelUpstreamHandler {
+public class DefaultBenchmarkHandler extends SimpleChannelUpstreamHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(StaticContentBenchmarkHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(DefaultBenchmarkHandler.class);
 
     /**
      * Executed when an exception is caught.

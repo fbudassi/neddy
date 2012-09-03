@@ -2,7 +2,7 @@ package com.fbudassi.neddy.benchmark.benchmarks;
 
 import com.fbudassi.neddy.benchmark.NeddyBenchmark;
 import com.fbudassi.neddy.benchmark.config.Config;
-import com.fbudassi.neddy.benchmark.pipeline.StaticContentPipelineFactory;
+import com.fbudassi.neddy.benchmark.pipeline.DefaultHttpPipelineFactory;
 import java.net.InetSocketAddress;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
@@ -109,6 +109,6 @@ public class StaticContentBenchmark implements Benchmark {
      */
     @Override
     public ChannelPipelineFactory getPipeline() {
-        return new StaticContentPipelineFactory();
+        return new DefaultHttpPipelineFactory();
     }
 }
