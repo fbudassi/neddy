@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 public class NeddyBenchmark implements Shutdownable {
 
     private static final Logger logger = LoggerFactory.getLogger(NeddyBenchmark.class);
+    private static final String VERSION = "1.0.0";
 
     //Allowed command line parameters
     public enum ParameterEnum {
@@ -64,15 +65,9 @@ public class NeddyBenchmark implements Shutdownable {
      * @param args
      */
     public void start(String[] args) throws InterruptedException, Exception {
-        logger.info("Starting up {}.", NeddyBenchmark.class.getSimpleName());
-
-        // Registers a shutdown hook to free resources of this class.
-        Runtime.getRuntime().addShutdownHook(new ShutdownThread(this, "NettyBenchmark Shutdown Thread"));
-
         // Process command line parameters
         if (args.length != 1) {
             System.out.print(getHelp(args));
-            logger.error("Program executed with incorrect number of parameters. Shutting down.");
             System.exit(-1);
         }
 
@@ -84,6 +79,11 @@ public class NeddyBenchmark implements Shutdownable {
             logger.error("Program called with invalid parameter. Shutting down.");
             System.exit(-1);
         }
+
+        logger.info("Starting up {}.", NeddyBenchmark.class.getSimpleName());
+
+        // Registers a shutdown hook to free resources of this class.
+        Runtime.getRuntime().addShutdownHook(new ShutdownThread(this, "NettyBenchmark Shutdown Thread"));
 
         // Gets the proper benchmark class.
         Benchmark benchmark = BenchmarkFactory.getBenchmark(benchmarkEnum);
@@ -136,7 +136,7 @@ public class NeddyBenchmark implements Shutdownable {
      * @return
      */
     private static String getHelp(String[] args) {
-        String help = "NeddyBenchmark - Parameters\n\n"
+        String help = "NeddyBenchmark " + VERSION + "\n\n"
                 + "Only one of the following parameters can be used at a time:\n"
                 + "\tstatic\tExecutes the static benchmark.\n"
                 + "\tws\tExecutes the predefined Websocket benchmark.\n"
