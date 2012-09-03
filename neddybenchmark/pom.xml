@@ -38,7 +38,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.fbudassi.neddybenchmark.NeddyBenchmark</mainClass>
+                            <mainClass>com.fbudassi.neddy.benchmark.NeddyBenchmark</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
