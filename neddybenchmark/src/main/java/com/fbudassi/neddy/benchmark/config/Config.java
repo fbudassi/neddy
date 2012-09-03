@@ -30,7 +30,6 @@ public final class Config {
     public static final String KEY_DELAY = "com.fbudassi.neddy.benchmark.delay";
     public static final String KEY_SERVER_PATH = "com.fbudassi.neddy.benchmark.serverpath";
     //Rest benchmark constants
-    public static final String KEY_NUMSPEAKERS = "com.fbudassi.neddy.benchmark.numspeakers";
     public static final String KEY_SPEAKER_NUMCATEGORIES = "com.fbudassi.neddy.benchmark.speaker.numcategories";
     public static final String KEY_SPEAKER_DELAYBETWEENMESSAGES = "com.fbudassi.neddy.benchmark.speaker.delaybetweenmessages";
     public static final String KEY_RESOURCE_CATEGORY = "com.fbudassi.neddy.benchmark.resource.category";
