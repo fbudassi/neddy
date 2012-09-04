@@ -1,5 +1,6 @@
 package com.fbudassi.neddy.benchmark.benchmarks;
 
+import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 
 /**
@@ -19,4 +20,9 @@ public interface Benchmark {
      * Return the necessary pipeline for this benchmark.
      */
     public ChannelPipelineFactory getPipeline();
+
+    /**
+     * Used to configure the bootstrap's socket options.
+     */
+    public void configureBootstrap(ClientBootstrap bootstrap);
 }

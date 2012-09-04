@@ -2,7 +2,6 @@ package com.fbudassi.neddy.benchmark;
 
 import com.fbudassi.neddy.benchmark.benchmarks.Benchmark;
 import com.fbudassi.neddy.benchmark.benchmarks.BenchmarkFactory;
-import com.fbudassi.neddy.benchmark.config.Config;
 import java.util.concurrent.Executors;
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.channel.ChannelPipelineFactory;
@@ -26,10 +25,6 @@ public class NeddyBenchmark implements Shutdownable {
     // Resources to be freed when shutdown happens.
     private static ClientBootstrap bootstrap;
     private static ChannelGroup allChannels;
-    // General configuration variables.
-    private static final boolean KEEPALIVE = Config.getBooleanValue(Config.KEY_KEEPALIVE);
-    private static final boolean TCPNODELAY = Config.getBooleanValue(Config.KEY_TCPNODELAY);
-    private static final int TIMEOUT = Config.getIntValue(Config.KEY_TIMEOUT);
 
     /**
      * Static constructor.
@@ -92,11 +87,8 @@ public class NeddyBenchmark implements Shutdownable {
         ChannelPipelineFactory pipelineFactory = benchmark.getPipeline();
         getBootstrap().setPipelineFactory(pipelineFactory);
 
-        // Set some necessary or convenient socket options.
-        // http://download.oracle.com/javase/6/docs/api/java/net/SocketOptions.html
-        getBootstrap().setOption("tcpNoDelay", TCPNODELAY); // disable Nagle's algorithm
-        getBootstrap().setOption("keepAlive", KEEPALIVE);  // keep alive connections
-        getBootstrap().setOption("connectTimeoutMillis", TIMEOUT); // connection timeout
+        // Set some necessary or convenient socket options in the bootstrap.
+        benchmark.configureBootstrap(getBootstrap());
 
         // Execute the requested benchmark.
         benchmark.execute();

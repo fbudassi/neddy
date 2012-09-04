@@ -4,6 +4,7 @@ import com.fbudassi.neddy.benchmark.config.Config;
 import com.fbudassi.neddy.benchmark.pipeline.WebsocketPipelineFactory;
 import java.net.URI;
 import java.net.URISyntaxException;
+import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketClientHandshaker;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketClientHandshakerFactory;
@@ -46,7 +47,6 @@ public class WebsocketBenchmark implements Benchmark {
     @Override
     public void execute() {
         //TODO
-        
         /*// Connect
          System.out.println("WebSocket Client connecting");
          ChannelFuture future =
@@ -84,6 +84,16 @@ public class WebsocketBenchmark implements Benchmark {
     @Override
     public ChannelPipelineFactory getPipeline() {
         return new WebsocketPipelineFactory(getHandshaker());
+    }
+
+    /**
+     * Configure the Netty bootstrap for the best behavior in this benchmark.
+     *
+     * @param bootstrap
+     */
+    @Override
+    public void configureBootstrap(ClientBootstrap bootstrap) {
+        // Nothing is necessary to be done for the Websocket benchmark.
     }
 
     /**

@@ -10,6 +10,7 @@ import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
@@ -34,6 +35,10 @@ public class RestBenchmark implements Benchmark {
     private Gson gson;
     private Random random;
     private LoremIpsum loremIpsum;
+    // Bootstrap socket options variables.
+    private static final boolean KEEPALIVE = Config.getBooleanValue(Config.KEY_KEEPALIVE);
+    private static final boolean TCPNODELAY = Config.getBooleanValue(Config.KEY_TCPNODELAY);
+    private static final int TIMEOUT = Config.getIntValue(Config.KEY_TIMEOUT);
     // Configuration constants.
     private static final String USERAGENT = Config.getValue(Config.KEY_USERAGENT);
     private static final int NUMCATEGORIES = Config.getIntValue(Config.KEY_SPEAKER_NUMCATEGORIES);
@@ -71,6 +76,20 @@ public class RestBenchmark implements Benchmark {
     @Override
     public ChannelPipelineFactory getPipeline() {
         return new DefaultHttpPipelineFactory();
+    }
+
+    /**
+     * Configure the Netty bootstrap for the best behavior for this benchmark.
+     *
+     * @param bootstrap
+     */
+    @Override
+    public void configureBootstrap(ClientBootstrap bootstrap) {
+        // Set some necessary or convenient socket options.
+        // http://download.oracle.com/javase/6/docs/api/java/net/SocketOptions.html
+        bootstrap.setOption("tcpNoDelay", TCPNODELAY); // disable Nagle's algorithm
+        bootstrap.setOption("keepAlive", KEEPALIVE);  // keep alive connections
+        bootstrap.setOption("connectTimeoutMillis", TIMEOUT); // connection timeout
     }
 
     /**
