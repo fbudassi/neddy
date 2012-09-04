@@ -118,39 +118,41 @@ public class RestBenchmark implements Benchmark {
      * Send a message to every category in the list every some milliseconds.
      */
     private void sendMessageLoop() throws InterruptedException {
-        for (String category : categories) {
-            // Message port request payload.
-            SpeakerActionBean requestBean = new SpeakerActionBean();
-            requestBean.setCategory(category);
-            requestBean.setMessage(loremIpsum.getWords(random.nextInt(100) + 10));
-            String jsonRequest = gson.toJson(requestBean);
+        while (true) {
+            for (String category : categories) {
+                // Message port request payload.
+                SpeakerActionBean requestBean = new SpeakerActionBean();
+                requestBean.setCategory(category);
+                requestBean.setMessage(loremIpsum.getWords(random.nextInt(100) + 10));
+                String jsonRequest = gson.toJson(requestBean);
 
-            // Create the channel.
-            ChannelFuture future = NeddyBenchmark.getBootstrap().connect(
-                    new InetSocketAddress(SERVER_ADDRESS, SERVER_PORT));
+                // Create the channel.
+                ChannelFuture future = NeddyBenchmark.getBootstrap().connect(
+                        new InetSocketAddress(SERVER_ADDRESS, SERVER_PORT));
 
-            // Wait until the connection attempt succeeds or fails.
-            Channel channel = future.awaitUninterruptibly().getChannel();
-            if (!future.isSuccess()) {
-                logger.error("Connection attempt not successful.", future.getCause());
-                return;
+                // Wait until the connection attempt succeeds or fails.
+                Channel channel = future.awaitUninterruptibly().getChannel();
+                if (!future.isSuccess()) {
+                    logger.error("Connection attempt not successful.", future.getCause());
+                    return;
+                }
+
+                // Prepare the HTTP request.
+                HttpRequest request = new DefaultHttpRequest(
+                        HttpVersion.HTTP_1_1, HttpMethod.POST, "/" + RESOURCE_CATEGORY);
+                request.setHeader(HttpHeaders.Names.HOST, SERVER_ADDRESS);
+                request.setHeader(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.CLOSE);
+                request.setHeader(HttpHeaders.Names.USER_AGENT, USERAGENT);
+                request.setHeader(HttpHeaders.Names.CONTENT_TYPE, "application/json");
+                request.setHeader(HttpHeaders.Names.CONTENT_LENGTH, jsonRequest.length());
+                request.setContent(ChannelBuffers.copiedBuffer(jsonRequest, org.jboss.netty.util.CharsetUtil.UTF_8));
+
+                // Send the HTTP request.
+                channel.write(request);
+
+                // Introduce a delay between messages creation.
+                Thread.sleep(DELAYBETWEENMESSAGES);
             }
-
-            // Prepare the HTTP request.
-            HttpRequest request = new DefaultHttpRequest(
-                    HttpVersion.HTTP_1_1, HttpMethod.POST, "/" + RESOURCE_CATEGORY);
-            request.setHeader(HttpHeaders.Names.HOST, SERVER_ADDRESS);
-            request.setHeader(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.CLOSE);
-            request.setHeader(HttpHeaders.Names.USER_AGENT, USERAGENT);
-            request.setHeader(HttpHeaders.Names.CONTENT_TYPE, "application/json");
-            request.setHeader(HttpHeaders.Names.CONTENT_LENGTH, jsonRequest.length());
-            request.setContent(ChannelBuffers.copiedBuffer(jsonRequest, org.jboss.netty.util.CharsetUtil.UTF_8));
-
-            // Send the HTTP request.
-            channel.write(request);
-
-            // Introduce a delay between messages creation.
-            Thread.sleep(DELAYBETWEENMESSAGES);
         }
     }
 }
