@@ -10,11 +10,9 @@ import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
-import org.jboss.netty.channel.ChannelFutureListener;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.handler.codec.http.DefaultHttpRequest;
 import org.jboss.netty.handler.codec.http.HttpHeaders;
@@ -108,15 +106,11 @@ public class RestBenchmark implements Benchmark {
             request.setHeader(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.CLOSE);
             request.setHeader(HttpHeaders.Names.USER_AGENT, USERAGENT);
             request.setHeader(HttpHeaders.Names.CONTENT_TYPE, "application/json");
+            request.setHeader(HttpHeaders.Names.CONTENT_LENGTH, jsonRequest.length());
+            request.setContent(ChannelBuffers.copiedBuffer(jsonRequest, org.jboss.netty.util.CharsetUtil.UTF_8));
 
             // Send the HTTP request.
             channel.write(request);
-
-            // Send the HTTP request body.
-            request.setContent(ChannelBuffers.copiedBuffer(jsonRequest, org.jboss.netty.util.CharsetUtil.UTF_8));
-
-            // Close the connection when the whole content is written out.
-            future.addListener(ChannelFutureListener.CLOSE);
         }
     }
 
@@ -149,13 +143,11 @@ public class RestBenchmark implements Benchmark {
             request.setHeader(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.CLOSE);
             request.setHeader(HttpHeaders.Names.USER_AGENT, USERAGENT);
             request.setHeader(HttpHeaders.Names.CONTENT_TYPE, "application/json");
+            request.setHeader(HttpHeaders.Names.CONTENT_LENGTH, jsonRequest.length());
             request.setContent(ChannelBuffers.copiedBuffer(jsonRequest, org.jboss.netty.util.CharsetUtil.UTF_8));
 
             // Send the HTTP request.
             channel.write(request);
-
-            // Close the connection when the whole content is written out.
-            future.addListener(ChannelFutureListener.CLOSE);
 
             // Introduce a delay between messages creation.
             Thread.sleep(DELAYBETWEENMESSAGES);
