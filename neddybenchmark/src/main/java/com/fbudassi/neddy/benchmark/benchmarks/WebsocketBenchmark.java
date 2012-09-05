@@ -1,11 +1,21 @@
 package com.fbudassi.neddy.benchmark.benchmarks;
 
+import com.fbudassi.neddy.benchmark.NeddyBenchmark;
+import com.fbudassi.neddy.benchmark.bean.ListenerActionBean;
+import com.fbudassi.neddy.benchmark.bean.ListenerActionBean.ListenerActionEnum;
 import com.fbudassi.neddy.benchmark.config.Config;
 import com.fbudassi.neddy.benchmark.pipeline.WebsocketPipelineFactory;
+import com.google.gson.Gson;
+import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Random;
 import org.jboss.netty.bootstrap.ClientBootstrap;
+import org.jboss.netty.channel.Channel;
+import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelPipelineFactory;
+import org.jboss.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketClientHandshaker;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketClientHandshakerFactory;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketVersion;
@@ -19,6 +29,8 @@ import org.slf4j.LoggerFactory;
 public class WebsocketBenchmark implements Benchmark {
 
     private static final Logger logger = LoggerFactory.getLogger(WebsocketBenchmark.class);
+    private static Gson gson = new Gson();
+    private static Random random = new Random();
     // Configuration constants.
     private static final int SERVER_PORT = Config.getIntValue(Config.KEY_SERVER_PORT);
     private static final String SERVER_ADDRESS = Config.getValue(Config.KEY_SERVER_ADDRESS);
@@ -34,6 +46,7 @@ public class WebsocketBenchmark implements Benchmark {
      * Websocket Benchmark constructor.
      */
     public WebsocketBenchmark() throws URISyntaxException {
+        // URL of the server, with the resource path
         uri = new URI("ws://" + SERVER_ADDRESS + ":" + SERVER_PORT + "/" + RESOURCE_LISTENER);
 
         // Connect with V13 (RFC 6455 aka HyBi-17).
@@ -45,35 +58,20 @@ public class WebsocketBenchmark implements Benchmark {
      * Executes the benchmark.
      */
     @Override
-    public void execute() {
-        //TODO
-        /*// Connect
-         System.out.println("WebSocket Client connecting");
-         ChannelFuture future =
-         bootstrap.connect(
-         new InetSocketAddress(uri.getHost(), uri.getPort()));
-         future.syncUninterruptibly();
+    public void execute() throws Exception {
+        // Open some Websocket channels to Neddy.
+        for (int l = 0; l < NUMLISTENERS; l++) {
+            // Open a Websocket channel to the server.
+            ChannelFuture future = NeddyBenchmark.getBootstrap().connect(
+                    new InetSocketAddress(uri.getHost(), uri.getPort()));
+            future.syncUninterruptibly();
+            Channel ch = future.getChannel();
+            handshaker.handshake(ch).syncUninterruptibly();
 
-         ch = future.getChannel();
-         handshaker.handshake(ch).syncUninterruptibly();
+            // Request the list of categories.
+            getCategories(ch);
+        }
 
-         // Send 10 messages and wait for responses
-         System.out.println("WebSocket Client sending message");
-         for (int i = 0; i < 1000; i++) {
-         ch.write(new TextWebSocketFrame("Message #" + i));
-         }
-
-         // Ping
-         System.out.println("WebSocket Client sending ping");
-         ch.write(new PingWebSocketFrame(ChannelBuffers.copiedBuffer(new byte[]{1, 2, 3, 4, 5, 6})));
-
-         // Close
-         System.out.println("WebSocket Client sending close");
-         ch.write(new CloseWebSocketFrame());
-
-         // WebSocketClientHandler will close the connection when the server
-         // responds to the CloseWebSocketFrame.
-         ch.getCloseFuture().awaitUninterruptibly();*/
     }
 
     /**
@@ -108,5 +106,32 @@ public class WebsocketBenchmark implements Benchmark {
      */
     public static WebSocketClientHandshaker getHandshaker() {
         return handshaker;
+    }
+
+    /**
+     * Request the categories to the server.
+     *
+     * @param ch
+     */
+    private void getCategories(Channel ch) {
+        ListenerActionBean listenerActionBean = new ListenerActionBean();
+        listenerActionBean.setAction(ListenerActionEnum.GET_CATEGORIES.toString());
+        ch.write(new TextWebSocketFrame(gson.toJson(listenerActionBean)));
+    }
+
+    /**
+     * Subscribes the channel to a number of categories in the list, randomly
+     * choosing among them.
+     *
+     * @param ch
+     * @param categories
+     */
+    public static void subscribeToCategories(Channel ch, List<String> categories) {
+        for (int n = 0; n < NUMCATEGORIES; n++) {
+            ListenerActionBean listenerActionBean = new ListenerActionBean();
+            listenerActionBean.setAction(ListenerActionEnum.SUBSCRIBE.toString());
+            listenerActionBean.setCategory(categories.get(random.nextInt(categories.size())));
+            ch.write(new TextWebSocketFrame(gson.toJson(listenerActionBean)));
+        }
     }
 }

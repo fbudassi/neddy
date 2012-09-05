@@ -1,5 +1,6 @@
 package com.fbudassi.neddy.benchmark.handler;
 
+import com.fbudassi.neddy.benchmark.benchmarks.WebsocketBenchmark;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelStateEvent;
@@ -31,17 +32,6 @@ public class WebSocketClientHandler extends SimpleChannelUpstreamHandler {
      */
     public WebSocketClientHandler(WebSocketClientHandshaker handshaker) {
         this.handshaker = handshaker;
-    }
-
-    /**
-     * Executed when channel is opened.
-     *
-     * @param ctx
-     * @param e
-     * @throws Exception
-     */
-    @Override
-    public void channelOpen(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
     }
 
     /**
