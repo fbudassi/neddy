@@ -3,11 +3,11 @@ package com.fbudassi.neddy.benchmark.bean;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Default fields for a Neddy answer to both Listeners and Pushers.
+ * Default fields for a Neddy message to both Listeners and Pushers.
  *
  * @author fbudassi
  */
-public class NeddyResponseBean {
+public class NeddyBean {
 
     @SerializedName("success")
     private boolean success;
@@ -19,7 +19,7 @@ public class NeddyResponseBean {
     private String category;
 
     /**
-     * Enumeration with all the possible errors when the request is being
+     * Enumeration with all the possible reasons when the request is being
      * processed.
      */
     public enum ReasonEnum {

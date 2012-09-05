@@ -3,14 +3,18 @@ package com.fbudassi.neddy.benchmark.benchmarks;
 import com.fbudassi.neddy.benchmark.NeddyBenchmark;
 import com.fbudassi.neddy.benchmark.bean.ListenerActionBean;
 import com.fbudassi.neddy.benchmark.bean.ListenerActionBean.ListenerActionEnum;
+import com.fbudassi.neddy.benchmark.bean.NeddyBean;
+import com.fbudassi.neddy.benchmark.bean.NeddyBean.ReasonEnum;
 import com.fbudassi.neddy.benchmark.config.Config;
 import com.fbudassi.neddy.benchmark.pipeline.WebsocketPipelineFactory;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Random;
+import org.apache.commons.lang3.StringUtils;
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
@@ -126,12 +130,59 @@ public class WebsocketBenchmark implements Benchmark {
      * @param ch
      * @param categories
      */
-    public static void subscribeToCategories(Channel ch, List<String> categories) {
+    private static void subscribeToCategories(Channel ch, List<String> categories) {
         for (int n = 0; n < NUMCATEGORIES; n++) {
             ListenerActionBean listenerActionBean = new ListenerActionBean();
             listenerActionBean.setAction(ListenerActionEnum.SUBSCRIBE.toString());
             listenerActionBean.setCategory(categories.get(random.nextInt(categories.size())));
             ch.write(new TextWebSocketFrame(gson.toJson(listenerActionBean)));
+        }
+    }
+
+    /**
+     * It processes the frame content of a Websocket.
+     *
+     * @param frameContent
+     */
+    public static void processFrame(Channel ch, String frameContent) {
+        try {
+            // Check if frame payload is empty.
+            if (StringUtils.isBlank(frameContent)) {
+                logger.error("Response payload is not valid: {}", frameContent);
+                return;
+            }
+
+            // Deserialize payload
+            NeddyBean neddyBean = gson.fromJson(frameContent, NeddyBean.class);
+
+            // Get valid message reason.
+            ReasonEnum reason;
+            try {
+                if (StringUtils.isBlank(neddyBean.getReason())) {
+                    logger.error("Request action is blank.");
+                    return;
+                }
+                reason = ReasonEnum.valueOf(neddyBean.getReason());
+            } catch (IllegalArgumentException iaex) {
+                // Invalid action.
+                logger.error("Invalid reason received.");
+                return;
+            }
+
+            // Process the different reason messages from Neddy.
+            switch (reason) {
+                case MESSAGE_NEW:
+                    logger.debug("Message received from {}: {}", neddyBean.getCategory(), neddyBean.getMessage());
+                    break;
+                case MESSAGE_CATEGORY_LIST:
+                    List<String> categories = gson.fromJson(neddyBean.getMessage(), List.class);
+                    subscribeToCategories(ch, categories);
+                    break;
+                default:
+                    logger.debug("Reason not recognized: {}", reason);
+            }
+        } catch (JsonSyntaxException jse) {
+            logger.error("Neddy payload can't be deserialized properly.", jse);
         }
     }
 }

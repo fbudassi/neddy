@@ -3,7 +3,6 @@ package com.fbudassi.neddy.benchmark.handler;
 import com.fbudassi.neddy.benchmark.benchmarks.WebsocketBenchmark;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelHandlerContext;
-import org.jboss.netty.channel.ChannelStateEvent;
 import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
@@ -62,7 +61,7 @@ public class WebSocketClientHandler extends SimpleChannelUpstreamHandler {
         WebSocketFrame frame = (WebSocketFrame) e.getMessage();
         if (frame instanceof TextWebSocketFrame) {
             TextWebSocketFrame textFrame = (TextWebSocketFrame) frame;
-            //TODO: process frame
+            WebsocketBenchmark.processFrame(ch, textFrame.getText());
         } else if (frame instanceof CloseWebSocketFrame) {
             ch.close();
         }
