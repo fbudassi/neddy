@@ -15,6 +15,14 @@ public class ListenerActionBean {
     private String category;
 
     /**
+     * Allowed actions for a Listener request.
+     */
+    public enum ListenerActionEnum {
+
+        SUBSCRIBE, UNSUBSCRIBE, GET_CATEGORIES, UNSUBSCRIBE_ALL
+    }
+
+    /**
      * @return the action
      */
     public String getAction() {
