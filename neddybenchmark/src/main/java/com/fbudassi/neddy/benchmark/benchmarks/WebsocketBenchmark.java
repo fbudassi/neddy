@@ -70,6 +70,7 @@ public class WebsocketBenchmark implements Benchmark {
                     new InetSocketAddress(uri.getHost(), uri.getPort()));
             future.syncUninterruptibly();
             Channel ch = future.getChannel();
+            NeddyBenchmark.getAllChannels().add(ch);
             handshaker.handshake(ch).syncUninterruptibly();
 
             // Request the list of categories.
