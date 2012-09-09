@@ -45,6 +45,9 @@ public class WebsocketBenchmark implements Benchmark {
     private static final String RESOURCE_LISTENER = Config.getValue(Config.KEY_RESOURCE_LISTENER);
     // URI where to connect the websocket.
     private static URI uri;
+    // Statistic variables.
+    private static int openConnections = 0;
+
 
     /**
      * Websocket Benchmark constructor.
@@ -76,6 +79,12 @@ public class WebsocketBenchmark implements Benchmark {
 
             // Request the list of categories.
             getCategories(ch);
+
+            // Increment open connections variable and print the number of listeners once in a while.
+            openConnections++;
+            if ((((double) openConnections * 100 / NUMLISTENERS) % 1) == 0) {
+                logger.info("There are {} listeners so far.", openConnections);
+            }
         }
 
     }
@@ -174,7 +183,7 @@ public class WebsocketBenchmark implements Benchmark {
                     subscribeToCategories(ch, categories);
                     break;
                 default:
-                    logger.debug("Reason not recognized: {}", reason);
+                    logger.info("Reason not recognized: {}", reason);
             }
         } catch (JsonSyntaxException jse) {
             logger.error("Neddy payload can't be deserialized properly.", jse);
