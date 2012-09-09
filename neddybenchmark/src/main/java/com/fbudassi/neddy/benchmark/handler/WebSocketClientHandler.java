@@ -16,22 +16,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * Websocket benchmark channel handler.
  *
  * @author fbudassi
  */
 public class WebSocketClientHandler extends SimpleChannelUpstreamHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(WebSocketClientHandler.class);
-    private final WebSocketClientHandshaker handshaker;
-
-    /**
-     * Handler constructor.
-     *
-     * @param handshaker
-     */
-    public WebSocketClientHandler(WebSocketClientHandshaker handshaker) {
-        this.handshaker = handshaker;
-    }
 
     /**
      * Executed when a new message is received.
@@ -45,6 +36,7 @@ public class WebSocketClientHandler extends SimpleChannelUpstreamHandler {
         Channel ch = ctx.getChannel();
 
         // Finish with the Websocket handshake if it's not done yet.
+        WebSocketClientHandshaker handshaker = (WebSocketClientHandshaker) ch.getAttachment();
         if (!handshaker.isHandshakeComplete()) {
             handshaker.finishHandshake(ch, (HttpResponse) e.getMessage());
             return;

@@ -27,6 +27,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * Websocket benchmark. Please go to the properties file for configurable
+ * parameters.
  *
  * @author fbudassi
  */
@@ -43,8 +45,6 @@ public class WebsocketBenchmark implements Benchmark {
     private static final String RESOURCE_LISTENER = Config.getValue(Config.KEY_RESOURCE_LISTENER);
     // URI where to connect the websocket.
     private static URI uri;
-    // Websocket handshaker.
-    private static WebSocketClientHandshaker handshaker;
 
     /**
      * Websocket Benchmark constructor.
@@ -52,10 +52,6 @@ public class WebsocketBenchmark implements Benchmark {
     public WebsocketBenchmark() throws URISyntaxException {
         // URL of the server, with the resource path
         uri = new URI("ws://" + SERVER_ADDRESS + ":" + SERVER_PORT + "/" + RESOURCE_LISTENER);
-
-        // Connect with V13 (RFC 6455 aka HyBi-17).
-        handshaker = new WebSocketClientHandshakerFactory().newHandshaker(
-                getUri(), WebSocketVersion.V13, null, false, null);
     }
 
     /**
@@ -71,6 +67,11 @@ public class WebsocketBenchmark implements Benchmark {
             future.syncUninterruptibly();
             Channel ch = future.getChannel();
             NeddyBenchmark.getAllChannels().add(ch);
+
+            // Start with the handshake step. Connect with V13 (RFC 6455 aka HyBi-17).
+            WebSocketClientHandshaker handshaker = new WebSocketClientHandshakerFactory().newHandshaker(
+                    getUri(), WebSocketVersion.V13, null, false, null);
+            ch.setAttachment(handshaker);
             handshaker.handshake(ch).syncUninterruptibly();
 
             // Request the list of categories.
@@ -86,7 +87,7 @@ public class WebsocketBenchmark implements Benchmark {
      */
     @Override
     public ChannelPipelineFactory getPipeline() {
-        return new WebsocketPipelineFactory(getHandshaker());
+        return new WebsocketPipelineFactory();
     }
 
     /**
@@ -104,13 +105,6 @@ public class WebsocketBenchmark implements Benchmark {
      */
     public static URI getUri() {
         return uri;
-    }
-
-    /**
-     * @return the handshaker
-     */
-    public static WebSocketClientHandshaker getHandshaker() {
-        return handshaker;
     }
 
     /**
