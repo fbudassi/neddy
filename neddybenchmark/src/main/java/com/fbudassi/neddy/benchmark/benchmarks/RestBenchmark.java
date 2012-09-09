@@ -143,6 +143,7 @@ public class RestBenchmark implements Benchmark {
      * Send a message to every category in the list every some milliseconds.
      */
     private void sendMessageLoop() throws InterruptedException {
+        logger.info("Start sending messages serially in each one of the {} categories.", NUMCATEGORIES);
         while (true) {
             for (String category : categories) {
                 // Message port request payload.
