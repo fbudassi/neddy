@@ -47,6 +47,9 @@ public class RestBenchmark implements Benchmark {
     // Server configuration constants.
     private static final int SERVER_PORT = Config.getIntValue(Config.KEY_REST_PORT);
     private static final String SERVER_ADDRESS = Config.getValue(Config.KEY_SERVER_ADDRESS);
+    // Statistic variables.
+    private static int messagesSent = 0;
+    private static final int LOG_EVERY = 1000;
 
     /**
      * Rest benchmark.
@@ -131,6 +134,9 @@ public class RestBenchmark implements Benchmark {
             // Send the HTTP request.
             channel.write(request);
         }
+
+        // Log some info.
+        logger.info("Finished creating {} categories.", NUMCATEGORIES);
     }
 
     /**
@@ -168,6 +174,12 @@ public class RestBenchmark implements Benchmark {
 
                 // Send the HTTP request.
                 channel.write(request);
+
+                // Log the number of messages sent so far, once in a while.
+                messagesSent++;
+                if (((double) messagesSent % LOG_EVERY) == 0) {
+                    logger.info("Messages sent so far: {}.", messagesSent);
+                }
 
                 // Introduce a delay between messages creation.
                 Thread.sleep(DELAYBETWEENMESSAGES);
