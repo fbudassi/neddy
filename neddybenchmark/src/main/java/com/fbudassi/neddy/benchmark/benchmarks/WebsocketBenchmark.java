@@ -183,7 +183,7 @@ public class WebsocketBenchmark implements Benchmark {
                     subscribeToCategories(ch, categories);
                     break;
                 default:
-                    logger.info("Reason not recognized: {}", reason);
+                    logger.debug("Reason not recognized: {}", reason);
             }
         } catch (JsonSyntaxException jse) {
             logger.error("Neddy payload can't be deserialized properly.", jse);

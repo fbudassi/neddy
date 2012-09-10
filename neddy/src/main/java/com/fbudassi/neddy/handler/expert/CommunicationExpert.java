@@ -42,7 +42,7 @@ public abstract class CommunicationExpert {
         // Log client information and URI requested.
         String remoteAddress = channel.getRemoteAddress().toString();
         String userAgent = request.getHeader(HttpHeaders.Names.USER_AGENT);
-        logger.info("{} - {} - requested: {} {}",
+        logger.debug("{} - {} - requested: {} {}",
                 new Object[]{remoteAddress, userAgent, request.getMethod().toString(), request.getUri()});
 
     }
