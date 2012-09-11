@@ -99,7 +99,7 @@ public class WebsocketBenchmark implements Benchmark {
                 // Increment open connections variable and print the number of listeners once in a while.
                 openConnections++;
                 if ((((double) openConnections * 100 / totalConnections) % 1) == 0) {
-                    logger.info("There are {} opened listeners  so far.", openConnections);
+                    logger.info("There are {} listeners so far.", openConnections);
                 }
             }
 
