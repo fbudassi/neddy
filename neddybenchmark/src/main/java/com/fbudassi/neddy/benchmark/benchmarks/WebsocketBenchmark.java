@@ -74,13 +74,12 @@ public class WebsocketBenchmark implements Benchmark {
                 CLIENT_BASEADDRESS.lastIndexOf(".") + 1, CLIENT_BASEADDRESS.length()));
 
         //IP addresses loop
-        String clientIp;
+        int lastPort = CLIENT_PORTSTART + NUMPORTS;
         for (int i = 0; i < NUMADDRESSES; i++) {
             // Build client ip.
-            clientIp = clientIpBase + clientIpLastOctet;
+            String clientIp = clientIpBase + clientIpLastOctet;
 
             //Ports loop
-            int lastPort = CLIENT_PORTSTART + NUMPORTS;
             for (int port = CLIENT_PORTSTART; port <= lastPort; port++) {
                 // Open a Websocket channel to the server.
                 ChannelFuture future = NeddyBenchmark.getBootstrap().connect(
@@ -97,7 +96,13 @@ public class WebsocketBenchmark implements Benchmark {
                 handshaker.handshake(ch).syncUninterruptibly();
 
                 // Request the list of categories.
-                //WebsocketBenchmark.getCategories(ch);
+                boolean handshakeNotReady = true;
+                while (handshakeNotReady) {
+                    if (handshaker.isHandshakeComplete()) {
+                        handshakeNotReady = false;
+                        WebsocketBenchmark.getCategories(ch);
+                    }
+                }
 
                 // Increment open connections variable and print the number of listeners once in a while.
                 openConnections++;
