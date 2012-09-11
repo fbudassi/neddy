@@ -35,7 +35,6 @@ public final class Config {
     public static final String KEY_RESOURCE_CATEGORY = "com.fbudassi.neddy.benchmark.resource.category";
     public static final String KEY_RESOURCE_LISTENERS = "com.fbudassi.neddy.benchmark.resource.listeners";
     //Websocket benchmark constants
-    public static final String KEY_NUMLISTENERS = "com.fbudassi.neddy.benchmark.numlisteners";
     public static final String KEY_LISTENER_NUMCATEGORIES = "com.fbudassi.neddy.benchmark.listener.numcategories";
     public static final String KEY_RESOURCE_LISTENER = "com.fbudassi.neddy.benchmark.resource.listener";
 
