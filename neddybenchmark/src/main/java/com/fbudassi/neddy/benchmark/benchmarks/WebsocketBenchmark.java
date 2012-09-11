@@ -102,6 +102,9 @@ public class WebsocketBenchmark implements Benchmark {
                     logger.info("There are {} opened listeners  so far.", openConnections);
                 }
             }
+
+            // Increment last octet.
+            clientIpLastOctet++;
         }
     }
 
