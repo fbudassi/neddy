@@ -39,10 +39,6 @@ public class WebSocketClientHandler extends SimpleChannelUpstreamHandler {
         WebSocketClientHandshaker handshaker = (WebSocketClientHandshaker) ch.getAttachment();
         if (!handshaker.isHandshakeComplete()) {
             handshaker.finishHandshake(ch, (HttpResponse) e.getMessage());
-
-            // Request the list of categories.
-            //WebsocketBenchmark.getCategories(ch);
-
             return;
         }
 
