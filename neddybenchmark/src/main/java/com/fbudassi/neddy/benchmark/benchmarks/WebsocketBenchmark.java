@@ -40,14 +40,18 @@ public class WebsocketBenchmark implements Benchmark {
     // Configuration constants.
     private static final int SERVER_PORT = Config.getIntValue(Config.KEY_SERVER_PORT);
     private static final String SERVER_ADDRESS = Config.getValue(Config.KEY_SERVER_ADDRESS);
-    private static final int NUMLISTENERS = Config.getIntValue(Config.KEY_NUMLISTENERS);
     private static final int NUMCATEGORIES = Config.getIntValue(Config.KEY_LISTENER_NUMCATEGORIES);
     private static final String RESOURCE_LISTENER = Config.getValue(Config.KEY_RESOURCE_LISTENER);
+    // Client configuration variables.
+    private static final int NUMADDRESSES = Config.getIntValue(Config.KEY_NUMADDRESSES);
+    private static final int NUMPORTS = Config.getIntValue(Config.KEY_NUMPORTS);
+    private static final int CLIENT_PORTSTART = Config.getIntValue(Config.KEY_CLIENT_PORTSTART);
+    private static final String CLIENT_BASEADDRESS = Config.getValue(Config.KEY_CLIENT_BASEADDRESS);
     // URI where to connect the websocket.
     private static URI uri;
     // Statistic variables.
+    private static int totalConnections = NUMADDRESSES * NUMPORTS;
     private static int openConnections = 0;
-
 
     /**
      * Websocket Benchmark constructor.
@@ -62,28 +66,43 @@ public class WebsocketBenchmark implements Benchmark {
      */
     @Override
     public void execute() throws Exception {
-        // Open some Websocket channels to Neddy.
-        for (int l = 0; l < NUMLISTENERS; l++) {
-            // Open a Websocket channel to the server.
-            ChannelFuture future = NeddyBenchmark.getBootstrap().connect(
-                    new InetSocketAddress(uri.getHost(), uri.getPort()));
-            future.syncUninterruptibly();
-            Channel ch = future.getChannel();
-            NeddyBenchmark.getAllChannels().add(ch);
+        logger.info("Trying to generate {} connections to the server", totalConnections);
 
-            // Start with the handshake step. Connect with V13 (RFC 6455 aka HyBi-17).
-            WebSocketClientHandshaker handshaker = new WebSocketClientHandshakerFactory().newHandshaker(
-                    getUri(), WebSocketVersion.V13, null, false, null);
-            ch.setAttachment(handshaker);
-            handshaker.handshake(ch).syncUninterruptibly();
+        // Get the first three octets by one side and the last one by the other side.
+        String clientIpBase = CLIENT_BASEADDRESS.substring(0, CLIENT_BASEADDRESS.lastIndexOf(".") + 1);
+        byte clientIpLastOctet = Byte.parseByte(CLIENT_BASEADDRESS.substring(
+                CLIENT_BASEADDRESS.lastIndexOf(".") + 1, CLIENT_BASEADDRESS.length()));
 
-            // Increment open connections variable and print the number of listeners once in a while.
-            openConnections++;
-            if ((((double) openConnections * 100 / NUMLISTENERS) % 1) == 0) {
-                logger.info("There are {} listeners so far.", openConnections);
+        //IP addresses loop
+        String clientIp;
+        for (int i = 0; i < NUMADDRESSES; i++) {
+            // Build client ip.
+            clientIp = clientIpBase + clientIpLastOctet;
+
+            //Ports loop
+            int lastPort = CLIENT_PORTSTART + NUMPORTS;
+            for (int port = CLIENT_PORTSTART; port <= lastPort; port++) {
+                // Open a Websocket channel to the server.
+                ChannelFuture future = NeddyBenchmark.getBootstrap().connect(
+                        new InetSocketAddress(uri.getHost(), uri.getPort()),
+                        new InetSocketAddress(clientIp, port));
+                future.syncUninterruptibly();
+                Channel ch = future.getChannel();
+                NeddyBenchmark.getAllChannels().add(ch);
+
+                // Start with the handshake step. Connect with V13 (RFC 6455 aka HyBi-17).
+                WebSocketClientHandshaker handshaker = new WebSocketClientHandshakerFactory().newHandshaker(
+                        getUri(), WebSocketVersion.V13, null, false, null);
+                ch.setAttachment(handshaker);
+                handshaker.handshake(ch).syncUninterruptibly();
+
+                // Increment open connections variable and print the number of listeners once in a while.
+                openConnections++;
+                if ((((double) openConnections * 100 / totalConnections) % 1) == 0) {
+                    logger.info("There are {} opened listeners  so far.", openConnections);
+                }
             }
         }
-
     }
 
     /**
