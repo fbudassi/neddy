@@ -66,7 +66,7 @@ public class WebsocketBenchmark implements Benchmark {
      */
     @Override
     public void execute() throws Exception {
-        logger.info("Trying to generate {} connections to the server", totalConnections);
+        logger.info("Trying to generate {} listeners to the server", totalConnections);
 
         // Get the first three octets by one side and the last one by the other side.
         String clientIpBase = CLIENT_BASEADDRESS.substring(0, CLIENT_BASEADDRESS.lastIndexOf(".") + 1);
