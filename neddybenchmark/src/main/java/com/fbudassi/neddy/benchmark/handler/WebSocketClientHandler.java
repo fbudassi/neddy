@@ -53,7 +53,7 @@ public class WebSocketClientHandler extends SimpleChannelUpstreamHandler {
         WebSocketFrame frame = (WebSocketFrame) e.getMessage();
         if (frame instanceof TextWebSocketFrame) {
             TextWebSocketFrame textFrame = (TextWebSocketFrame) frame;
-            WebsocketBenchmark.processFrame(ch, textFrame.getText());
+            //WebsocketBenchmark.processFrame(ch, textFrame.getText());
         } else if (frame instanceof CloseWebSocketFrame) {
             ch.close();
         }
