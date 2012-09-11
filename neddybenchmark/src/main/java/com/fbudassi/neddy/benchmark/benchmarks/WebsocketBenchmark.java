@@ -96,10 +96,10 @@ public class WebsocketBenchmark implements Benchmark {
                 handshaker.handshake(ch).syncUninterruptibly();
 
                 // Request the list of categories.
-                boolean handshakeNotReady = true;
-                while (handshakeNotReady) {
+                boolean handshakeReady = false;
+                while (!handshakeReady) {
                     if (handshaker.isHandshakeComplete()) {
-                        handshakeNotReady = false;
+                        handshakeReady = true;
                         WebsocketBenchmark.getCategories(ch);
                     }
                 }
