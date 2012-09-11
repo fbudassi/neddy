@@ -39,6 +39,10 @@ public class WebSocketClientHandler extends SimpleChannelUpstreamHandler {
         WebSocketClientHandshaker handshaker = (WebSocketClientHandshaker) ch.getAttachment();
         if (!handshaker.isHandshakeComplete()) {
             handshaker.finishHandshake(ch, (HttpResponse) e.getMessage());
+
+            // Request the list of categories.
+            WebsocketBenchmark.getCategories(ch);
+
             return;
         }
 
@@ -53,7 +57,7 @@ public class WebSocketClientHandler extends SimpleChannelUpstreamHandler {
         WebSocketFrame frame = (WebSocketFrame) e.getMessage();
         if (frame instanceof TextWebSocketFrame) {
             TextWebSocketFrame textFrame = (TextWebSocketFrame) frame;
-            WebsocketBenchmark.processFrame(ch, textFrame.getText());
+            //WebsocketBenchmark.processFrame(ch, textFrame.getText());
         } else if (frame instanceof CloseWebSocketFrame) {
             ch.close();
         }
