@@ -96,10 +96,8 @@ public class WebsocketBenchmark implements Benchmark {
                 handshaker.handshake(ch).syncUninterruptibly();
 
                 // Request the list of categories.
-                while (!handshaker.isHandshakeComplete()) {
-                    // Just wait.
-                }
-                //WebsocketBenchmark.getCategories(ch);
+                Thread.sleep(1);
+                WebsocketBenchmark.getCategories(ch);
 
                 // Increment open connections variable and print the number of listeners once in a while.
                 openConnections++;
