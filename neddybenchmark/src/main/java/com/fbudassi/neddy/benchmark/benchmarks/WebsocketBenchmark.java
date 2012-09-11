@@ -83,19 +83,21 @@ public class WebsocketBenchmark implements Benchmark {
             int lastPort = CLIENT_PORTSTART + NUMPORTS;
             for (int port = CLIENT_PORTSTART; port <= lastPort; port++) {
                 // Open a Websocket channel to the server.
-                Channel ch = NeddyBenchmark.getBootstrap().connect(
+                ChannelFuture future = NeddyBenchmark.getBootstrap().connect(
                         new InetSocketAddress(uri.getHost(), uri.getPort()),
-                        new InetSocketAddress(clientIp, port)).sync().getChannel();
+                        new InetSocketAddress(clientIp, port));
+                future.syncUninterruptibly();
+                Channel ch = future.getChannel();
                 NeddyBenchmark.getAllChannels().add(ch);
 
                 // Start with the handshake step. Connect with V13 (RFC 6455 aka HyBi-17).
                 WebSocketClientHandshaker handshaker = new WebSocketClientHandshakerFactory().newHandshaker(
                         getUri(), WebSocketVersion.V13, null, false, null);
                 ch.setAttachment(handshaker);
-                handshaker.handshake(ch).sync();
+                handshaker.handshake(ch).syncUninterruptibly();
 
                 // Request the list of categories.
-                WebsocketBenchmark.getCategories(ch);
+                //WebsocketBenchmark.getCategories(ch);
 
                 // Increment open connections variable and print the number of listeners once in a while.
                 openConnections++;
