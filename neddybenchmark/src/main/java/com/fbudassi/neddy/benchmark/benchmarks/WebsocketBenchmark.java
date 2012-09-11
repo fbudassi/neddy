@@ -96,7 +96,6 @@ public class WebsocketBenchmark implements Benchmark {
                 handshaker.handshake(ch).syncUninterruptibly();
 
                 // Request the list of categories.
-                Thread.sleep(1);
                 WebsocketBenchmark.getCategories(ch);
 
                 // Increment open connections variable and print the number of listeners once in a while.
@@ -157,6 +156,10 @@ public class WebsocketBenchmark implements Benchmark {
      * @param categories
      */
     private static void subscribeToCategories(Channel ch, List<String> categories) {
+        if (categories.isEmpty()) {
+            return;
+        }
+
         for (int n = 0; n < NUMCATEGORIES; n++) {
             ListenerActionBean listenerActionBean = new ListenerActionBean();
             listenerActionBean.setAction(ListenerActionEnum.SUBSCRIBE.toString());
