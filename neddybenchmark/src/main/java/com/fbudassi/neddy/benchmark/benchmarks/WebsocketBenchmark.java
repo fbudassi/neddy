@@ -19,7 +19,6 @@ import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelPipelineFactory;
-import org.jboss.netty.handler.codec.http.websocketx.PingWebSocketFrame;
 import org.jboss.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketClientHandshaker;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketClientHandshakerFactory;
@@ -43,6 +42,7 @@ public class WebsocketBenchmark implements Benchmark {
     private static final String SERVER_ADDRESS = Config.getValue(Config.KEY_SERVER_ADDRESS);
     private static final int NUMCATEGORIES = Config.getIntValue(Config.KEY_LISTENER_NUMCATEGORIES);
     private static final String RESOURCE_LISTENER = Config.getValue(Config.KEY_RESOURCE_LISTENER);
+    private static final int DELAY = Config.getIntValue(Config.KEY_DELAY);
     // Client configuration variables.
     private static final int NUMADDRESSES = Config.getIntValue(Config.KEY_NUMADDRESSES);
     private static final int NUMPORTS = Config.getIntValue(Config.KEY_NUMPORTS);
@@ -97,14 +97,16 @@ public class WebsocketBenchmark implements Benchmark {
                 handshaker.handshake(ch).syncUninterruptibly();
 
                 // Request the list of categories.
-                ch.write(new PingWebSocketFrame());
-                //WebsocketBenchmark.getCategories(ch);
+                WebsocketBenchmark.getCategories(ch);
 
                 // Increment open connections variable and print the number of listeners once in a while.
                 openConnections++;
                 if ((((double) openConnections * 100 / totalConnections) % 1) == 0) {
                     logger.info("There are {} listeners so far.", openConnections);
                 }
+
+                // Delay between every connection (give the server some breath).
+                Thread.sleep(DELAY);
             }
 
             // Increment last octet.
