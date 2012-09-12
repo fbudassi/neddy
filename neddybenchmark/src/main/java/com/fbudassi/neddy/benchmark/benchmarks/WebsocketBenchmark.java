@@ -19,6 +19,7 @@ import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelPipelineFactory;
+import org.jboss.netty.handler.codec.http.websocketx.PingWebSocketFrame;
 import org.jboss.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketClientHandshaker;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketClientHandshakerFactory;
@@ -35,7 +36,7 @@ import org.slf4j.LoggerFactory;
 public class WebsocketBenchmark implements Benchmark {
 
     private static final Logger logger = LoggerFactory.getLogger(WebsocketBenchmark.class);
-    //private static Gson gson = new Gson();
+    private static Gson gson = new Gson();
     private static Random random = new Random();
     // Configuration constants.
     private static final int SERVER_PORT = Config.getIntValue(Config.KEY_SERVER_PORT);
@@ -96,7 +97,8 @@ public class WebsocketBenchmark implements Benchmark {
                 handshaker.handshake(ch).syncUninterruptibly();
 
                 // Request the list of categories.
-                WebsocketBenchmark.getCategories(ch);
+                ch.write(new PingWebSocketFrame());
+                //WebsocketBenchmark.getCategories(ch);
 
                 // Increment open connections variable and print the number of listeners once in a while.
                 openConnections++;
@@ -143,7 +145,6 @@ public class WebsocketBenchmark implements Benchmark {
      * @param ch
      */
     public static void getCategories(Channel ch) {
-        Gson gson = new Gson();
         ListenerActionBean listenerActionBean = new ListenerActionBean();
         listenerActionBean.setAction(ListenerActionEnum.GET_CATEGORIES.toString());
         ch.write(new TextWebSocketFrame(gson.toJson(listenerActionBean)));
@@ -160,8 +161,6 @@ public class WebsocketBenchmark implements Benchmark {
         if (categories.isEmpty()) {
             return;
         }
-
-        Gson gson = new Gson();
 
         for (int n = 0; n < NUMCATEGORIES; n++) {
             ListenerActionBean listenerActionBean = new ListenerActionBean();
@@ -185,7 +184,6 @@ public class WebsocketBenchmark implements Benchmark {
             }
 
             // Deserialize payload
-            Gson gson = new Gson();
             NeddyBean neddyBean = gson.fromJson(frameContent, NeddyBean.class);
 
             // Get valid message reason.

@@ -8,6 +8,7 @@ import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.jboss.netty.handler.codec.http.websocketx.CloseWebSocketFrame;
+import org.jboss.netty.handler.codec.http.websocketx.PongWebSocketFrame;
 import org.jboss.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketClientHandshaker;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketFrame;
@@ -54,6 +55,8 @@ public class WebSocketClientHandler extends SimpleChannelUpstreamHandler {
         if (frame instanceof TextWebSocketFrame) {
             TextWebSocketFrame textFrame = (TextWebSocketFrame) frame;
             //WebsocketBenchmark.processFrame(ch, textFrame.getText());
+        } else if (frame instanceof PongWebSocketFrame) {
+            logger.info("Pong received.");
         } else if (frame instanceof CloseWebSocketFrame) {
             ch.close();
         }
