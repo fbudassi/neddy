@@ -19,6 +19,7 @@ import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelPipelineFactory;
+import org.jboss.netty.handler.codec.http.websocketx.PingWebSocketFrame;
 import org.jboss.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketClientHandshaker;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketClientHandshakerFactory;
@@ -43,6 +44,7 @@ public class WebsocketBenchmark implements Benchmark {
     private static final int NUMCATEGORIES = Config.getIntValue(Config.KEY_LISTENER_NUMCATEGORIES);
     private static final String RESOURCE_LISTENER = Config.getValue(Config.KEY_RESOURCE_LISTENER);
     private static final int DELAY = Config.getIntValue(Config.KEY_DELAY);
+    private static final boolean PING_TEST = Config.getBooleanValue(Config.KEY_WEBSOCKET_PING);
     // Client configuration variables.
     private static final int NUMADDRESSES = Config.getIntValue(Config.KEY_NUMADDRESSES);
     private static final int NUMPORTS = Config.getIntValue(Config.KEY_NUMPORTS);
@@ -96,8 +98,12 @@ public class WebsocketBenchmark implements Benchmark {
                 ch.setAttachment(handshaker);
                 handshaker.handshake(ch).syncUninterruptibly();
 
-                // Request the list of categories.
-                WebsocketBenchmark.getCategories(ch);
+                // Choose the benchmark to do, Ping test or Get Categories test.
+                if (PING_TEST) {
+                    ch.write(new PingWebSocketFrame());
+                } else {
+                    WebsocketBenchmark.getCategories(ch);
+                }
 
                 // Increment open connections variable and print the number of listeners once in a while.
                 openConnections++;
