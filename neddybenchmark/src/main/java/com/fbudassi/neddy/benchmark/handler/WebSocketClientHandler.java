@@ -56,7 +56,7 @@ public class WebSocketClientHandler extends SimpleChannelUpstreamHandler {
             TextWebSocketFrame textFrame = (TextWebSocketFrame) frame;
             WebsocketBenchmark.processFrame(ch, textFrame.getText());
         } else if (frame instanceof PongWebSocketFrame) {
-            logger.info("Pong received.");
+            logger.debug("Pong received.");
         } else if (frame instanceof CloseWebSocketFrame) {
             ch.close();
         }
