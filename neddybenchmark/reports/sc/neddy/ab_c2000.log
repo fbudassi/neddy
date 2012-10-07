@@ -1,0 +1,44 @@
+This is ApacheBench, Version 2.3 <$Revision: 655654 $>
+Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
+Licensed to The Apache Software Foundation, http://www.apache.org/
+
+Benchmarking 192.168.1.127 (be patient)
+
+
+Server Software:        Neddy/1.0.0
+Server Hostname:        192.168.1.127
+Server Port:            8090
+
+Document Path:          /index.html
+Document Length:        177 bytes
+
+Concurrency Level:      2000
+Time taken for tests:   70.456 seconds
+Complete requests:      1000000
+Failed requests:        0
+Write errors:           0
+Keep-Alive requests:    1000000
+Total transferred:      370000000 bytes
+HTML transferred:       177000000 bytes
+Requests per second:    14193.23 [#/sec] (mean)
+Time per request:       140.912 [ms] (mean)
+Time per request:       0.070 [ms] (mean, across all concurrent requests)
+Transfer rate:          5128.41 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    2  54.0      0    3297
+Processing:     1  139  83.1    141    9786
+Waiting:        0  139  83.0    141    9786
+Total:          1  141 103.1    141    9786
+
+Percentage of the requests served within a certain time (ms)
+  50%    141
+  66%    148
+  75%    153
+  80%    156
+  90%    168
+  95%    197
+  98%    292
+  99%    324
+ 100%   9786 (longest request)
