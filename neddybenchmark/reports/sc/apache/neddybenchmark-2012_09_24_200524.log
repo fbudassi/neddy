@@ -1,0 +1,9 @@
+197     [main] INFO  c.f.neddy.benchmark.NeddyBenchmark - Starting up NeddyBenchmark.
+205     [main] INFO  c.f.n.b.b.StaticContentBenchmark - Trying to generate 1000000 connections to the server
+52284   [main] INFO  c.f.n.b.b.StaticContentBenchmark - There are 10000 open connections so far.
+109734  [main] INFO  c.f.n.b.b.StaticContentBenchmark - There are 20000 open connections so far.
+168539  [main] INFO  c.f.n.b.b.StaticContentBenchmark - There are 30000 open connections so far.
+227308  [main] INFO  c.f.n.b.b.StaticContentBenchmark - There are 40000 open connections so far.
+286219  Started to kill processes, at around 45000 threads that filled the memory.
+350134  [NettyBenchmark Shutdown Thread] INFO  c.f.neddy.benchmark.ShutdownThread - Executing shutdown on com.fbudassi.neddy.benchmark.NeddyBenchmark.
+362255  [NettyBenchmark Shutdown Thread] INFO  c.f.neddy.benchmark.ShutdownThread - Shutdown successful on com.fbudassi.neddy.benchmark.NeddyBenchmark.
